@@ -1,32 +1,45 @@
 syntax = "proto3";
-package tutorial;
+package event;
 
 import "google/protobuf/timestamp.proto";
-option go_package = "/protobufs";
+option go_package = "/protobufs/events";
 
 
-message Person {
-  string name = 1;
-  int32 id = 2;  // Unique ID number for this person.
-  string email = 3;
+// So when a user does a thing we crate an event
+// Architecture: FrontEnd posts to the real time data base these events
+// Backend microservices consume these events on event invocation/creation
+message Event {
 
-  enum PhoneType {
-    MOBILE = 0;
-    HOME = 1;
-    WORK = 2;
-  }
+  google.protobuf.Timestamp createdTime = 1;
+  AgoraEventType eventType = 2;
 
-  message PhoneNumber {
-    string number = 1;
-    PhoneType type = 2;
-  }
+//  oneof EventData {
+//
+//  }
 
-  repeated PhoneNumber phones = 4;
-
-  google.protobuf.Timestamp last_updated = 5;
 }
 
-// Our address book file is just one of these.
-message AddressBook {
-  repeated Person people = 1;
+enum AgoraEventType {
+
+  UNDEFINED = 0;
+  ThreadCreated = 1;
+  CommentSubmitted = 2;
+
 }
+
+// These events have to match what the font end sends
+// easier said than done
+message ThreadCreatedEvent {
+  string threadUUID = 2;
+}
+message CommentSubmittedEvent {
+  string commentUUID = 2;
+}
+message UserFollowedEvent {
+
+}
+message UserInvitedToThreadEvent {}
+message UserMentionedEvent {}
+//message ReportSubmittedEvent {} // This comes later
+
+
