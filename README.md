@@ -9,6 +9,16 @@ There is a lot to do here so lets get started
    3. users
    4. reports
 
+### Talking with Andrew
+1. Follow a thread without signing in 
+   1. Prompt them then to make an account for max ability 
+   2. Follow a thread via email 
+   3. Still no sign in process 
+   4. Email/notify a post stat at the End of the day 
+      1. Stats 
+      2. Threads 
+      3. Summary
+
 
 #### The TODOs
 
@@ -59,10 +69,15 @@ There is a lot to do here so lets get started
       6. etc.
    5. this is the users graph and this is big boy money $$$ that we need for funding and ad $$
 10. Notify the people that are invited to contribute to a thread MS
-11. Post Hashtags
-    1. hashtag data agg
-    2. hashtags are too broad and too varied to enable the feature of following hashtags
-12. Post topic(s)
+11. Post Hashtags - later
+    1. Need to make the hashtags not be virtue signaling
+       1. nor dog whistling
+    2. Make the hashtag a tagging fucntion
+       1. referencing a thread
+    3. hashtags as a niche in threads
+    4. hashtag data agg
+    5. hashtags are too broad and too varied to enable the feature of following hashtags
+12. Post topic(s) - High priority
     1. users following the topic
     2. topic data aggregation
 13. If a user posts a thread, notify the people that are following that user
