@@ -2,21 +2,97 @@ package main
 
 import (
 	"fmt"
-	"github.com/admin-agora/backend/protobufs/protobufs"
+	"github.com/admin-agora/backend/sql/entity"
+	_ "github.com/denisenkom/go-mssqldb"
+	// "gorm.io/driver/sqlserver"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"log"
 )
+
+
+type Employees struct {
+	Id uint64
+	Name string
+	Location string
+}
+
+func gormExample() {
+
+	//gormDb, err := gorm.Open(sqlserver.Open(dsn), &gorm.Config{})
+	dosn := "agora_mysql_admin:DigitalMcDonalds$3.21@tcp(agora-mysql-dev.mysql.database.azure.com)/agora?charset=utf8mb4"
+	fmt.Println(dosn)
+	gormDb, err := gorm.Open(mysql.Open(dosn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("fuck")
+		return
+	}
+
+	var newE = Employees{
+		2,
+		"Ethan",
+		"New york",
+	}
+	gormDb.Create(&newE)
+	if err != nil {
+		log.Fatal("cannot validate connection")
+	}
+	var employee Employees
+	// gormDb.First(&employee)
+	fmt.Println(employee)
+	fmt.Println("i honestly cannot believe this fucking worked")
+}
+
+func BuildUser(user *entity.User) {
+
+	user.Username = "etcpie"
+	user.FirstName = "Ethan"
+	user.LastName = "Hicks"
+	user.Email = "etmhicks@gmail.com"
+	user.Password = "DigitalMcDonalds&3.21"
+	user.Type = entity.Employee
+	user.BEFSJson =`{
+	   "name":"John",
+	   "age":29,
+	   "hobbies":[
+		  "martial arts",
+		  "breakfast foods",
+		  "piano"
+	   ]
+	}`
+
+
+}
 
 func main() {
 
-	// this is not really for anything but to act as a github file making sure I set up the depencencies correcly
-	// ok good
-	person := protobufs.Person{
-		Name:        "",
-		Id:          0,
-		Email:       "",
-		Phones:      nil,
-		LastUpdated: nil,
+	// Create connection pool
+	gormExample()
+
+	dosn := "agora_mysql_admin:DigitalMcDonalds$3.21@tcp(agora-mysql-dev.mysql.database.azure.com)/agora?charset=utf8mb4&parseTime=true"
+	fmt.Println(dosn)
+	gormDb, sqlErr := gorm.Open(mysql.Open(dosn), &gorm.Config{})
+
+	if sqlErr != nil {
+		fmt.Println("fuck, but in connection")
 	}
 
-	fmt.Println(person)
+	var user entity.User
+	err := user.CreateTable(gormDb)
+	BuildUser(&user)
+	fmt.Println("pause here please and thank your")
+	gormDb.Create(&user)
+
+	var ethan entity.User
+	gormDb.First(&ethan)
+	ethanError := ethan.DataBaseUnMarshall()
+	if ethanError != nil {
+		fmt.Println("fuck ethan")
+	}
+	fmt.Println("pause here please and thank your 2")
+	if err != nil {
+		fmt.Println("fuck")
+	}
 
 }
+

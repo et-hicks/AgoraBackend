@@ -1,4 +1,4 @@
-CREATE TABLE threads (
+CREATE TABLE user (
     id int NOT NULL
     createdTime time NOT NULL
     lastUpdatedTime time NOT NULL
