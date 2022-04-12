@@ -2,7 +2,6 @@ package entity
 
 import (
 	"encoding/json"
-	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -26,15 +25,20 @@ type User struct {
 	PhoneNumber uint64
 	PhoneCode   uint64
 	Type     AccountType
-	FEFSJson string
-	BEFSJson string
-	BEFS map[string]interface{} `gorm:"-:all"`
-	FEFS map[string]interface{} `gorm:"-:all"`
+	FunctionalStuff
 }
 
-func (u User) DataBaseUnMarshall()  error {
-	var befs map[string]interface{}
-	var fefs map[string]interface{}
+func (u *User) LoadForCode() error {
+	befs := make(map[string]interface{})
+	fefs := make(map[string]interface{})
+
+	if u.BEFSJson == "" {
+		u.BEFSJson = "{}"
+	}
+	if u.FEFSJson == "" {
+		u.FEFSJson = "{}"
+	}
+
 	// TODO: handle null values here
 	errFefs := json.Unmarshal([]byte(u.BEFSJson), &befs)
 	errBefs := json.Unmarshal([]byte(u.FEFSJson), &fefs)
@@ -51,7 +55,7 @@ func (u User) DataBaseUnMarshall()  error {
 	return nil
 }
 
-func (u User) DataBaseMarshall() error {
+func (u *User) UnloadForDatabase() error {
 	fefsJson, errFefs := json.Marshal(u.FEFS)
 	befsJson, errBefs := json.Marshal(u.BEFS)
 
@@ -69,7 +73,7 @@ func (u User) DataBaseMarshall() error {
 }
 
 
-func (u User) CreateTable(db *gorm.DB) error {
+func (u *User) CreateTable(db *gorm.DB) error {
 	createTableSql := `
 		CREATE TABLE users (
 		id bigint NOT NULL AUTO_INCREMENT,
@@ -90,14 +94,13 @@ func (u User) CreateTable(db *gorm.DB) error {
 		Primary Key(ID)
 	) ENGINE=InnoDB;
 	`
-	fmt.Println(createTableSql)
 
 	db.Exec(createTableSql)
 
 	return nil
 }
 
-func (u User) UpdateTable(db *gorm.DB, sqlUpdate string) error {
+func (u *User) UpdateTable(db *gorm.DB, sqlUpdate string) error {
 	db.Exec(sqlUpdate)
 
 	return nil

@@ -1,5 +1,8 @@
 package types
 
+
+// TODO: Create this
+
 type ReportedType int64
 const (
 	ReportedComment ReportedType = iota

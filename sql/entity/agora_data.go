@@ -3,8 +3,8 @@ package entity
 import "gorm.io/gorm"
 
 type AgoraData interface {
-	DataBaseMarshall() error
-	DataBaseUnMarshall() error
+	LoadForCode() error
+	UnloadForDatabase() error
 }
 
 type AgoraSQL interface {

@@ -60,6 +60,7 @@ func BuildUser(user *entity.User) {
 		  "piano"
 	   ]
 	}`
+	// user.BEFS := make(map[string]interface{})
 
 
 }
@@ -78,21 +79,29 @@ func main() {
 	}
 
 	var user entity.User
-	err := user.CreateTable(gormDb)
+
 	BuildUser(&user)
 	fmt.Println("pause here please and thank your")
 	gormDb.Create(&user)
 
 	var ethan entity.User
 	gormDb.First(&ethan)
-	ethanError := ethan.DataBaseUnMarshall()
-	if ethanError != nil {
-		fmt.Println("fuck ethan")
+	errE := ethan.LoadForCode()
+	if errE != nil {
+		return
 	}
+
 	fmt.Println("pause here please and thank your 2")
-	if err != nil {
+
+	newFEFS := make(map[string]interface{})
+	newFEFS["frontEndName"] = "Johnny Sins"
+	newFEFS["backEndName"] = "Anal McGee"
+	ethan.FEFS = newFEFS
+	ethanUnloadError := ethan.UnloadForDatabase()
+	if ethanUnloadError != nil {
 		fmt.Println("fuck")
 	}
+	gormDb.Updates(ethan)
 
 }
 
