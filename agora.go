@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/admin-agora/backend/sql/entity"
 	_ "github.com/denisenkom/go-mssqldb"
+	"net/http"
+
 	// "gorm.io/driver/sqlserver"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -67,6 +69,15 @@ func BuildUser(user *entity.User) {
 
 func main() {
 
+	http.HandleFunc("/", CommentPostService)
+
+	err := http.ListenAndServe(":8090", nil)
+	if err != nil {
+		return
+	}
+}
+
+func gormTest() {
 	// Create connection pool
 	gormExample()
 

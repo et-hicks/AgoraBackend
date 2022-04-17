@@ -1,7 +1,8 @@
 package microservices
 
+import "net/http"
 
 type AgoraService interface {
 	Init() error
-	Run() error
+	ProcessRequest(w http.ResponseWriter, r *http.Request)
 }

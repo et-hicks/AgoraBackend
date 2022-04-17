@@ -2,27 +2,27 @@ package posting
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
+	"github.com/admin-agora/backend/messages"
+	"google.golang.org/protobuf/encoding/protojson"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"html"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-type PostProcessing struct {
+type CommentPostProcessing struct {
 	db *gorm.DB
-	router *gin.Engine
 }
 
-func (p *PostProcessing) Init() error {
+func (p *CommentPostProcessing) Init() error {
 	dosn := "agora_mysql_admin:DigitalMcDonalds$3.21@tcp(agora-mysql-dev.mysql.database.azure.com)/agora?charset=utf8mb4&parseTime=true"
 	fmt.Println(dosn)
 	gormDb, sqlErr := gorm.Open(mysql.Open(dosn), &gorm.Config{})
 
 	// Assign the SQL connection to
 	p.db = gormDb
-
-	p.router = gin.Default()
 
 	if sqlErr != nil {
 		return sqlErr
@@ -31,22 +31,25 @@ func (p *PostProcessing) Init() error {
 	return nil
 }
 
-func (p *PostProcessing) Run() error {
-
-	p.router.GET("/hiThere/:name", hiHandler)
-
-
-
-	routerErr := p.router.Run(":8080")
-	if routerErr != nil {
-		log.Fatal(routerErr)
+func (p *CommentPostProcessing) ProcessRequest(w http.ResponseWriter, r *http.Request) {
+	body, readErr := ioutil.ReadAll(r.Body)
+	if readErr != nil {
+		log.Fatal("error in byte reading")
 	}
-	return nil
+	log.Println("parsed the io stream")
+	commentPosted := &messages.CommentPosted{}
+	unmarshallErr := protojson.Unmarshal(body, commentPosted)
+	if unmarshallErr != nil {
+		log.Fatal("error in unmarshall", unmarshallErr)
+	}
+	// json decode to protobuf
+	// persist comment
+	// breakdown
+	_, fmtError := fmt.Fprintf(w, "Hello, %s!", html.EscapeString(commentPosted.Comment))
+	if fmtError != nil {
+		log.Fatal("error in f print f")
+	}
 }
 
-func hiHandler(c *gin.Context) {
-	name := c.Param("name")
-	c.String(http.StatusOK, "hello %s", name)
-}
 
 
