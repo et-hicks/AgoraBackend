@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/admin-agora/backend/cloudfunctions"
 	"github.com/admin-agora/backend/sql/entity"
 	_ "github.com/denisenkom/go-mssqldb"
 	// "gorm.io/driver/sqlserver"
@@ -68,7 +67,7 @@ func BuildUser(user *entity.User) {
 
 func main() {
 
-	cloudfunctions.SQLSetUp()
+	SQLSetUp(nil, nil)
 
 	//http.HandleFunc("/", CommentPostService)
 	//

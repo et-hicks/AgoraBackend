@@ -1,4 +1,4 @@
-package cloudfunctions
+package main
 
 import (
 	"fmt"
