@@ -63,7 +63,7 @@ func (c *AgoraComment) UnloadForDatabase() error {
 
 func (c *AgoraComment) CreateTable(db *gorm.DB) error {
 	createTableSql := `
-		CREATE TABLE agora_comments (
+		CREATE TABLE IF NOT EXISTS agora_comments (
 		id bigint NOT NULL AUTO_INCREMENT,
 		created_at DATETIME NOT NULL,
 		updated_at DATETIME NOT NULL,

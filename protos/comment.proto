@@ -6,6 +6,6 @@ option go_package = "/messages";
 
 message CommentPosted {
   string comment = 1;
-  uint64 userId = 2;
+  uint64 authorID = 2;
 
 }

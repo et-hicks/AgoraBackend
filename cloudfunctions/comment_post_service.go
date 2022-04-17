@@ -1,4 +1,4 @@
-package main
+package cloudfunctions
 
 import (
 	"github.com/admin-agora/backend/src/microservices/posting"
