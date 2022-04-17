@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/admin-agora/backend/microservices/commentprocessing"
 	"github.com/admin-agora/backend/sql/entity"
 	_ "github.com/denisenkom/go-mssqldb"
+	"os"
+
 	// "gorm.io/driver/sqlserver"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -67,7 +70,11 @@ func BuildUser(user *entity.User) {
 
 func main() {
 
-	SQLSetUp(nil, nil)
+	name := os.Getenv("K_SERVICE")
+	if name == "agoracomments" {
+		commentprocessing.Service()
+	}
+	//SQLSetUp(nil, nil)
 
 	//http.HandleFunc("/", CommentPostService)
 	//

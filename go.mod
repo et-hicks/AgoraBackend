@@ -9,4 +9,7 @@ require (
 	gorm.io/gorm v1.23.4
 )
 
-require golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
+require (
+	github.com/gin-gonic/gin v1.7.7
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
+)
