@@ -1,0 +1,16 @@
+syntax = "proto3";
+package messages;
+
+import "google/protobuf/timestamp.proto";
+option go_package = "/messages";
+
+
+
+// TODO: Impl
+message Attachments {
+  uint64 id = 1;
+  string uuid = 2;
+  string url = 3;
+  string filetype = 4;
+  string accessLevel = 5;
+}

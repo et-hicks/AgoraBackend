@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/admin-agora/backend/microservices/commentprocessing"
+	"github.com/admin-agora/backend/microservices/threadprocessing"
 	"github.com/admin-agora/backend/sql/entity"
 	_ "github.com/denisenkom/go-mssqldb"
 	"os"
@@ -70,10 +71,13 @@ func BuildUser(user *entity.User) {
 
 func main() {
 
+	// TODO: set the IP address for the azure database to be valid in cloud run
+
 	name := os.Getenv("K_SERVICE")
 	if name == "agoracomments" {
 		commentprocessing.Service()
 	}
+	threadprocessing.Service()
 	//SQLSetUp(nil, nil)
 
 	//http.HandleFunc("/", CommentPostService)

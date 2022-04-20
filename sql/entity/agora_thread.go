@@ -2,6 +2,7 @@ package entity
 
 import (
 	"encoding/json"
+	"github.com/admin-agora/backend/messages"
 	"gorm.io/gorm"
 )
 
@@ -11,14 +12,15 @@ import (
 type AgoraThread struct {
 	gorm.Model
 	Title string
-	CreatorID User `gorm:"foreignKey:ID"`
+	Description string
+	CreatorID uint
 	Likes uint64
 	Dislikes uint64
 	Clicks uint64
 	Watchers uint64
 	UrlUUID string
 	ImageURL string
-	IsPublic bool
+	Public messages.PublicityLevel
 	IsReported bool
 	FunctionalStuff
 }
@@ -69,11 +71,12 @@ func (t *AgoraThread) UnloadForDatabase() error {
 
 func (t *AgoraThread) CreateTable(db *gorm.DB) error {
 	createTableSql := `
-		CREATE TABLE threads (
+		CREATE TABLE IF NOT EXISTS agora_threads (
 			id bigint NOT NULL AUTO_INCREMENT,
 			created_at DATETIME NOT NULL,
 			updated_at DATETIME NOT NULL,
-			deleted_at CHAR(255) CHARACTER SET UTF8MB4,
+			deleted_at CHAR(255) CHARACTER SET UTF8MB4 DEFAULT NULL,
+
 			title CHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
 			description CHAR(255) CHARACTER SET UTF8MB4 DEFAULT NULL,
 			creator_id BIGINT NOT NULL,
@@ -81,11 +84,11 @@ func (t *AgoraThread) CreateTable(db *gorm.DB) error {
 			dislikes BIGINT DEFAULT NULL,
 			clicks BIGINT DEFAULT NULL,
 			watchers BIGINT DEFAULT NULL,
-			
 			url_uuid CHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
-			image_url CHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
-			is_public INT NOT NULL,
+			image_url CHAR(255) DEFAULT NULL,
+			public CHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
 			is_reported INT NOT NULL,
+
 			fefs_json TEXT DEFAULT NULL,
 			befs_json TEXT DEFAULT NULL,
 			

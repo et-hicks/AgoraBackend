@@ -1,0 +1,49 @@
+// For the JSON that comes from REST endpoints
+syntax = "proto3";
+package messages;
+
+import "google/protobuf/timestamp.proto";
+option go_package = "/messages";
+
+message ThreadInfo {
+  string title = 1;
+  string description = 2;
+  uint64 authorID = 3;
+  repeated ThreadContributor threadContributors = 4;
+
+  // To Exist only when the thread is SemiPrivate
+  repeated ThreadViewers viewers = 5; // TODO: Impl functionality
+  PublicityLevel publicityLevel = 6;
+
+  // To come from AFTER the upload phase
+  string imageURL = 10;
+}
+
+message UpdateThread {
+  // Different so as not to confuse the stuff above
+  string threadUUID = 1;
+  ThreadInfo threadInfo = 2;
+}
+
+enum PublicityLevel {
+  UnknownPublicLevel = 0;
+  ThreadPublic = 1;
+  ThreadPrivate = 2;
+  ThreadSemiPrivate = 3;   // TODO: Impl functionality
+  ThreadFollowersOnly = 4; // TODO: Impl functionality
+}
+
+enum ContributeLevel {
+  UnknownLevel = 0;
+  ThreadPoster = 1;
+  ThreadAdmin = 2;
+}
+
+message ThreadContributor {
+  uint64 authorID = 1;
+  ContributeLevel level = 2;
+}
+
+message ThreadViewers {
+  repeated uint64 viewerIDs = 1;
+}

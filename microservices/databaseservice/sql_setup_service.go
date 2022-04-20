@@ -1,4 +1,4 @@
-package main
+package databaseservice
 
 import (
 	"fmt"
@@ -9,6 +9,13 @@ import (
 	"net/http"
 )
 
+// TODO:
+// TODO:
+
+// TODO: Refactor this into a gin context microservice
+
+// TODO:
+// TODO:
 
 
 func SQLSetUp(w http.ResponseWriter, r *http.Request) {

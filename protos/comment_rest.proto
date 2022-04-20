@@ -2,10 +2,13 @@ syntax = "proto3";
 package messages;
 
 import "google/protobuf/timestamp.proto";
+import "general.proto";
 option go_package = "/messages";
 
 message CommentPosted {
   string comment = 1;
   uint64 authorID = 2;
-
+  uint64 threadID = 3;
+  string threadUUID = 4;
+  repeated Attachments attachments = 5;
 }

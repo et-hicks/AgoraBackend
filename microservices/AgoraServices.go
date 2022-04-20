@@ -1,6 +1,8 @@
 package microservices
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type AgoraService interface {
 	Init() error

@@ -6,7 +6,8 @@ echo "\t" "$AGORA_PROTO_DIR"
 echo "\t" "$AGORA_PROTO_DST_DIR"
 
 # remove old compiled files
-cd protobufs && rm -rf protobufs
+rm -rf messages
+mkdir messages
 
 protoc -I="$AGORA_PROTO_DIR" --go_out="$AGORA_PROTO_DST_DIR" "$AGORA_PROTO_DIR"/*.proto
 
