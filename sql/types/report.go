@@ -11,7 +11,7 @@ const (
 )
 
 type Report struct {
-	Id uint64
+	Id uint
 	CreatedTime uint64     		 // Milliseconds since Epoch
 	LastUpdatedTime uint64		 // Milliseconds since Epoch
 	ReporterId int64			 // references users table

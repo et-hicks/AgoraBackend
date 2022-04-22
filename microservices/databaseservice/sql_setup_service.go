@@ -31,7 +31,7 @@ func SQLSetUp(w http.ResponseWriter, r *http.Request) {
 	var agoraThreads entity.AgoraThread
 	var contributor entity.Contribute
 	var topics entity.Topic
-	var users entity.User
+	var users entity.AgoraUser
 	var watcher entity.Watcher
 
 

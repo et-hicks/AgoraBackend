@@ -16,7 +16,7 @@ import (
 
 
 type Employees struct {
-	Id uint64
+	Id uint
 	Name string
 	Location string
 }
@@ -47,7 +47,7 @@ func gormExample() {
 	fmt.Println("i honestly cannot believe this fucking worked")
 }
 
-func BuildUser(user *entity.User) {
+func BuildUser(user *entity.AgoraUser) {
 
 	user.Username = "etcpie"
 	user.FirstName = "Ethan"
@@ -74,18 +74,18 @@ func main() {
 	// TODO: set the IP address for the azure database to be valid in cloud run
 
 	name := os.Getenv("K_SERVICE")
-	if name == "agoracomments" {
+	switch name {
+	case "agoracomments":
 		commentprocessing.Service()
+	case "agorathreads":
+		threadprocessing.Service()
+	default:
+		log.Println("nothing found for name")
 	}
-	threadprocessing.Service()
+	//gormTest()
+	commentprocessing.Service()
+	//threadprocessing.Service()
 	//SQLSetUp(nil, nil)
-
-	//http.HandleFunc("/", CommentPostService)
-	//
-	//err := http.ListenAndServe(":8090", nil)
-	//if err != nil {
-	//	return
-	//}
 }
 
 func gormTest() {
@@ -100,13 +100,13 @@ func gormTest() {
 		fmt.Println("fuck, but in connection")
 	}
 
-	var user entity.User
+	var user entity.AgoraUser
 
 	BuildUser(&user)
 	fmt.Println("pause here please and thank your")
 	gormDb.Create(&user)
 
-	var ethan entity.User
+	var ethan entity.AgoraUser
 	gormDb.First(&ethan)
 	errE := ethan.LoadForCode()
 	if errE != nil {

@@ -11,8 +11,8 @@ const (
 )
 type Watcher struct {
 	gorm.Model
-	Watcher User      	`gorm:"foreignKey:ID"`
-	Thread		AgoraThread `gorm:"foreignKey:ID"`
+	Watcher AgoraUser   `gorm:"foreignKey:ID"`
+	Thread  AgoraThread `gorm:"foreignKey:ID"`
 	Status WatcherStatus
 }
 func (w *Watcher) LoadForCode() error {

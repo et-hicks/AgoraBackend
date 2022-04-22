@@ -18,9 +18,9 @@ const (
 
 type Contribute struct {
 	gorm.Model
-	Contributor User      	`gorm:"foreignKey:ID"`
-	Thread		AgoraThread `gorm:"foreignKey:ID"`
-	Access AccessLevel       // to define how they can interact with the thread
+	Contributor AgoraUser   `gorm:"foreignKey:ID"`
+	Thread      AgoraThread `gorm:"foreignKey:ID"`
+	Access AccessLevel      // to define how they can interact with the thread
 }
 
 func (c *Contribute) LoadForCode() error {

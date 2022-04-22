@@ -43,7 +43,7 @@ func createEntity(info *messages.ThreadInfo, db *gorm.DB) (*entity.AgoraThread, 
 
 	// TODO: implement access level and all that jazz
 
-	//var user entity.User
+	//var user entity.AgoraUser
 	//db.First(&user, info.AuthorID) // DB Access
 	uid, uidErr := uuid.NewUUID()
 	if uidErr != nil {

@@ -1,14 +1,10 @@
 package commentprocessing
 
 import (
-	"github.com/admin-agora/backend/messages"
 	"github.com/admin-agora/backend/src/utils/microserviceutils"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/protobuf/encoding/protojson"
 	"gorm.io/gorm"
-	"io/ioutil"
 	"log"
-	"net/http"
 )
 
 type CommentPostProcessing struct {
@@ -36,16 +32,7 @@ func (p *CommentPostProcessing) Run() {
 
 	// Create new comment on post
 
-	p.router.POST("/user", func(c *gin.Context) {
-		body, _ := ioutil.ReadAll(c.Request.Body)
-		commentPosted := &messages.CommentPosted{}
-		if unmarshallErr := protojson.Unmarshal(body, commentPosted); unmarshallErr != nil {
-			log.Println("error in marshalling: ", unmarshallErr)
-		}
-		log.Println(commentPosted.Comment)
-		bits, _ := protojson.Marshal(commentPosted)
-		c.String(http.StatusOK, string(bits))
-	})
+	p.router.POST("/comment", CreateComment(p.db))
 
 	p.router.DELETE("/reset", func (c *gin.Context) {
 		log.Fatal("Resetting server")

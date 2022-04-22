@@ -15,7 +15,7 @@ const (
 
 
 
-type User struct {
+type AgoraUser struct {
 	gorm.Model
 	FirstName   string
 	LastName    string
@@ -28,7 +28,7 @@ type User struct {
 	FunctionalStuff
 }
 
-func (u *User) LoadForCode() error {
+func (u *AgoraUser) LoadForCode() error {
 	befs := make(map[string]interface{})
 	fefs := make(map[string]interface{})
 
@@ -55,7 +55,7 @@ func (u *User) LoadForCode() error {
 	return nil
 }
 
-func (u *User) UnloadForDatabase() error {
+func (u *AgoraUser) UnloadForDatabase() error {
 	fefsJson, errFefs := json.Marshal(u.FEFS)
 	befsJson, errBefs := json.Marshal(u.BEFS)
 
@@ -73,9 +73,9 @@ func (u *User) UnloadForDatabase() error {
 }
 
 
-func (u *User) CreateTable(db *gorm.DB) error {
+func (u *AgoraUser) CreateTable(db *gorm.DB) error {
 	createTableSql := `
-		CREATE TABLE users (
+		CREATE TABLE agora_users (
 		id bigint NOT NULL AUTO_INCREMENT,
 		created_at DATETIME NOT NULL,
 		updated_at DATETIME NOT NULL,
@@ -100,7 +100,7 @@ func (u *User) CreateTable(db *gorm.DB) error {
 	return nil
 }
 
-func (u *User) UpdateTable(db *gorm.DB, sqlUpdate string) error {
+func (u *AgoraUser) UpdateTable(db *gorm.DB, sqlUpdate string) error {
 	db.Exec(sqlUpdate)
 
 	return nil

@@ -7,13 +7,14 @@ import (
 
 type AgoraComment struct {
 	gorm.Model
-	AuthorID User `gorm:"foreignKey:ID"`
-	ParentCommentId uint64 // TODO: learn how to deal with this
+	AuthorID        uint
+	ParentCommentUUID string
 	Comment 		string
 	IsEdited		bool
 	IsReported 		bool
 	Likes			uint64
 	Dislikes		uint64
+	UUID string
 	FunctionalStuff
 }
 
@@ -70,12 +71,13 @@ func (c *AgoraComment) CreateTable(db *gorm.DB) error {
 		deleted_at CHAR(255) CHARACTER SET UTF8MB4,
 		
         author_id BIGINT,
-        parent_comment_id BIGINT DEFAULT NULL,
+        parent_comment_uuid CHAR(255) CHARACTER SET UTF8MB4,
 		comment TEXT DEFAULT NULL,
 		is_edited INT NOT NULL,
         is_reported INT NOT NULL,
         likes BIGINT DEFAULT NULL,
 		dislikes BIGINT DEFAULT NULL,
+		uuid CHAR(255) CHARACTER SET UTF8MB4,
 		
 		fefs_json TEXT DEFAULT NULL,
 		befs_json TEXT DEFAULT NULL,
