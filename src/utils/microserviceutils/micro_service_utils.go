@@ -8,8 +8,9 @@ import (
 	"log"
 )
 
-type HTTPError struct {
+type HTTPResponse struct {
 	Message string `json:"message"`
+	Success bool `json:"success"`
 }
 
 func GeneralInit() (*gorm.DB, *gin.Engine, error) {
@@ -33,7 +34,13 @@ func HardReset(*gin.Context) {
 	log.Fatal("Resetting server")
 }
 
-func BadHTTP(err error) HTTPError {
-	return HTTPError{Message: err.Error()}
+func BadHTTP(err error) HTTPResponse {
+	return HTTPResponse{Message: err.Error()}
 }
+
+func GoodHTTP(response string, success bool) HTTPResponse {
+	return HTTPResponse{Message: response, Success: success}
+}
+
+
 

@@ -1,0 +1,47 @@
+syntax = "proto3";
+package messages;
+
+import "google/protobuf/timestamp.proto";
+option go_package = "/messages";
+
+
+// Login
+// Create
+
+message UserInfo {
+  string userName = 1;
+  string password = 2;
+
+  // TODO:  Impl
+  string phoneNumber = 3;
+  string phoneCode = 4;
+
+  // TODO: Impl
+  string displayFirstName = 5;
+  string displayLastName = 6;
+  string email = 7;
+  AccountType type = 8;
+
+  // TODO: FEFS and BEFS
+}
+
+message UserResponse {
+  string username = 1;
+  LogInResult result = 2;
+}
+
+enum LogInResult {
+  UnknownResult = 0;
+  Success = 1;
+  Failure = 2;
+  ServerOverloaded = 3;
+}
+
+enum AccountType {
+  UnknownAccountType = 0;
+  Contributor = 1;
+  Commentary = 2;
+  Login = 3;
+  Employee = 4;
+  Academic = 5;
+}

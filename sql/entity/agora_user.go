@@ -2,16 +2,11 @@ package entity
 
 import (
 	"encoding/json"
+	"github.com/admin-agora/backend/messages"
 	"gorm.io/gorm"
 )
 
-type AccountType int64
-const (
-	Contributor AccountType = iota  // thread creator
-	Commentary						// can make comments but not threads
-	Login 							// login and just view stuff
-	Employee						// Employees of Agora
-)
+
 
 
 
@@ -22,9 +17,9 @@ type AgoraUser struct {
 	Username    string
 	Email       string
 	Password    string
-	PhoneNumber uint64
-	PhoneCode   uint64
-	Type     AccountType
+	PhoneNumber string
+	PhoneCode   string
+	Type     messages.AccountType
 	FunctionalStuff
 }
 
