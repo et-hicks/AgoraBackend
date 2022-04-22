@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/admin-agora/backend/messages"
 	"github.com/admin-agora/backend/microservices/commentprocessing"
 	"github.com/admin-agora/backend/microservices/threadprocessing"
+	"github.com/admin-agora/backend/microservices/userprocessing"
 	"github.com/admin-agora/backend/sql/entity"
 	_ "github.com/denisenkom/go-mssqldb"
 	"os"
@@ -54,7 +56,7 @@ func BuildUser(user *entity.AgoraUser) {
 	user.LastName = "Hicks"
 	user.Email = "etmhicks@gmail.com"
 	user.Password = "DigitalMcDonalds&3.21"
-	user.Type = entity.Employee
+	user.Type = messages.AccountType(4)
 	user.BEFSJson =`{
 	   "name":"John",
 	   "age":29,
@@ -79,12 +81,16 @@ func main() {
 		commentprocessing.Service()
 	case "agorathreads":
 		threadprocessing.Service()
+	case "agorauser":
+		userprocessing.Service()
 	default:
 		log.Println("nothing found for name")
 	}
 	//gormTest()
-	commentprocessing.Service()
+	//commentprocessing.Service()
 	//threadprocessing.Service()
+	userprocessing.Service()
+
 	//SQLSetUp(nil, nil)
 }
 

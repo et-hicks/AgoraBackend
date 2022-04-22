@@ -9,7 +9,7 @@ option go_package = "/messages";
 // Create
 
 message UserInfo {
-  string userName = 1;
+  string username = 1;
   string password = 2;
 
   // TODO:  Impl

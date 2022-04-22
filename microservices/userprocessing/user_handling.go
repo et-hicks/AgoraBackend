@@ -26,18 +26,22 @@ func Login(db *gorm.DB) func(ctx *gin.Context) {
 			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(nilChecking))
 			return
 		}
-		var existingUser *entity.AgoraUser
-		result := db.First(existingUser, "username = ? or email = ?", userInfo.UserName, userInfo.Email) // DB Access
+		existingUser := &entity.AgoraUser{}
+		result := db.First(existingUser, "username = ? or email = ?", userInfo.Username, userInfo.Email) // DB Access
+
 		if result.Error != nil {
 			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(result.Error))
 			return
 		}
-		if existingUser.Email == userInfo.Email {
-			ctx.JSON(http.StatusOK, microserviceutils.GoodHTTP("user found", true))
-		} else {
+		if existingUser.ID == 0 {
 			ctx.JSON(http.StatusOK, microserviceutils.GoodHTTP("no user found", false))
 		}
-
+		message, match, foundError := found(userInfo, existingUser)
+		if foundError != nil {
+			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(foundError))
+			return
+		}
+		ctx.JSON(http.StatusOK, microserviceutils.GoodHTTP(message, match))
 	}
 }
 
@@ -54,7 +58,17 @@ func CreateUser(db *gorm.DB) func(ctx *gin.Context) {
 			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(nilChecking))
 			return
 		}
-		result := db.Create(CreateUserEntity(userInfo)) // DB Access
+		// TODO: validate email string
+
+		// Check if they exist already
+		existingUser := &entity.AgoraUser{}
+		db.First(existingUser, "username = ? or email = ?", userInfo.Username, userInfo.Email) // DB Access
+		if existingUser.ID != 0 {
+			ctx.JSON(http.StatusOK, microserviceutils.GoodHTTP("username/email already exists", false))
+			return
+		}
+
+		result := db.Create(UserEntityFactory(userInfo)) // DB Access
 		if result.Error != nil {
 			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(result.Error))
 			return
@@ -63,14 +77,42 @@ func CreateUser(db *gorm.DB) func(ctx *gin.Context) {
 	}
 }
 
-func CreateUserEntity(userInfo *messages.UserInfo) *entity.AgoraUser {
+func found(userInfo *messages.UserInfo, userEntity *entity.AgoraUser) (string, bool, error) {
+	password, err := microserviceutils.Encrypt(userInfo.Password, microserviceutils.MySecret)
+	if err != nil {
+		return "", false, err
+	}
+	passwordMatch := password == userEntity.Password
+	message := "No user found"
 
+	if userInfo.Username == "" {
+		emailsMatch := userEntity.Email == userInfo.Email
+		match := passwordMatch && emailsMatch
+		if match {
+			message = "user successfully found"
+		}
+		return message, passwordMatch && emailsMatch, nil
+	}
+	usernameMatch := userInfo.Username == userEntity.Username
+	match := passwordMatch && usernameMatch
+	if match {
+		message = "user successfully found"
+	}
+	return message, match, nil
+}
+
+func UserEntityFactory(userInfo *messages.UserInfo) *entity.AgoraUser {
+
+	password, err := microserviceutils.Encrypt(userInfo.Password, microserviceutils.MySecret)
+	if err != nil {
+		return nil
+	}
 	return &entity.AgoraUser{
 		FirstName:       userInfo.DisplayFirstName,
 		LastName:        userInfo.DisplayLastName,
-		Username:        userInfo.UserName,
+		Username:        userInfo.Username,
 		Email:           userInfo.Email,
-		Password:        userInfo.Password,
+		Password:        password,
 		PhoneNumber:     userInfo.PhoneNumber,
 		PhoneCode:       userInfo.PhoneCode,
 		Type:            userInfo.Type,
@@ -80,8 +122,8 @@ func CreateUserEntity(userInfo *messages.UserInfo) *entity.AgoraUser {
 
 func nilCheck(userInfo *messages.UserInfo, forLogin bool) error {
 
-	if userInfo.UserName == "" {
-		return errors.New("no username set")
+	if userInfo.Username == "" && userInfo.Email == "" {
+		return errors.New("no username/email set")
 	}
 	if userInfo.Password == "" {
 		return errors.New("no password found")
@@ -102,7 +144,7 @@ func nilCheck(userInfo *messages.UserInfo, forLogin bool) error {
 
 func decomposeBody(ctx *gin.Context) (*messages.UserInfo, error) {
 	body, _ := ioutil.ReadAll(ctx.Request.Body)
-	var userInfo *messages.UserInfo
+	userInfo := &messages.UserInfo{}
 	if unmarshallErr := protojson.Unmarshal(body, userInfo); unmarshallErr != nil {
 		return nil, unmarshallErr
 	}
