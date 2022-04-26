@@ -14,6 +14,9 @@ import (
 	"net/http"
 )
 
+// CreateThread
+// Method should work for both posts and threads
+// posts will simply have no contributors
 func CreateThread(db *gorm.DB) func(ctx *gin.Context) {
 	log.Println("I cannot believe this actually worked")
 
@@ -27,9 +30,15 @@ func CreateThread(db *gorm.DB) func(ctx *gin.Context) {
 			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(err))
 			return
 		}
-		agoraThread, err := createEntity(newThread, db)
+		agoraThread, err := createThreadEntity(newThread, db)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(err))
+			return
+		}
+
+		// need the thread entity for the contributors to load properly
+		if contributeErr := createThreadContributors(db, agoraThread.ID, agoraThread.CreatorID, newThread.ThreadContributors); contributeErr != nil {
+			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(contributeErr))
 			return
 		}
 		log.Println("created new thread with title: ", agoraThread.Title, "and id: ", agoraThread.ID)
@@ -39,7 +48,7 @@ func CreateThread(db *gorm.DB) func(ctx *gin.Context) {
 
 
 
-func createEntity(info *messages.ThreadInfo, db *gorm.DB) (*entity.AgoraThread, error) {
+func createThreadEntity(info *messages.ThreadInfo, db *gorm.DB) (*entity.AgoraThread, error) {
 
 	// TODO: implement access level and all that jazz
 
@@ -69,6 +78,33 @@ func createEntity(info *messages.ThreadInfo, db *gorm.DB) (*entity.AgoraThread, 
 	}
 	log.Println(result.RowsAffected)
 	return &thread, nil
+}
+
+func createThreadContributors(db *gorm.DB, threadID uint, creatorID uint, contributors []*messages.ThreadContributor) error {
+	threadCreator := messages.ContributeLevel_ThreadCreator
+
+	creator := entity.Contribute{
+		Contributor: creatorID,
+		Thread:      threadID,
+		Access:      threadCreator,
+	}
+	result := db.Create(&creator) // DB access
+	if result.Error != nil {
+		return result.Error
+	}
+
+	for _, contributor := range contributors {
+		canContribute := entity.Contribute{
+			Contributor: uint(contributor.AuthorID),
+			Thread:      threadID,
+			Access:      contributor.Level,
+		}
+		contributeResult := db.Create(&canContribute) // DB access
+		if contributeResult.Error != nil {
+			log.Println("Error: Cannot create", contributor.AuthorID, " in the thing.")
+		}
+	}
+	return nil
 }
 
 func nilChecks(info *messages.ThreadInfo) error {

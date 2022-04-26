@@ -89,7 +89,7 @@ func main() {
 	//gormTest()
 	//commentprocessing.Service()
 	//threadprocessing.Service()
-	userprocessing.Service()
+	//userprocessing.Service()
 
 	//SQLSetUp(nil, nil)
 }

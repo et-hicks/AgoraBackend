@@ -1,26 +1,17 @@
 package entity
 
 import (
+	"github.com/admin-agora/backend/messages"
 	"gorm.io/gorm"
 )
 
-type AccessLevel int64
-const (
-	Undefined AccessLevel = iota
-	Admin
-	Moderator
-	Creator
-	Commenter
-	Revoked
-	Blocked
-	Viewer
-)
+
 
 type Contribute struct {
 	gorm.Model
-	Contributor AgoraUser   `gorm:"foreignKey:ID"`
-	Thread      AgoraThread `gorm:"foreignKey:ID"`
-	Access AccessLevel      // to define how they can interact with the thread
+	Contributor uint
+	Thread      uint
+	Access messages.ContributeLevel
 }
 
 func (c *Contribute) LoadForCode() error {
@@ -47,8 +38,6 @@ func (c *Contribute) CreateTable(db *gorm.DB) error {
 			access CHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
 		
 			PRIMARY KEY(id),
-			CONSTRAINT fk_contributor_id_users_id FOREIGN KEY(contributor_id) REFERENCES users(id),
-			CONSTRAINT fk_contributor_id_threads_id FOREIGN KEY(thread_id) REFERENCES threads(id)
 
 		) ENGINE=InnoDB;
 	`
@@ -56,6 +45,34 @@ func (c *Contribute) CreateTable(db *gorm.DB) error {
 
 	db.Exec(createTableSql)
 
+	return nil
+}
+
+func (c *Contribute) AddConstraints(db *gorm.DB) error {
+	// i dont think gorm requires semicolons at the end
+	// TODO: determine if gorm needs semicolons
+	threadsConstraint :=
+		"alter table contributors add CONSTRAINT if not exists fk_contributor_id_threads_id FOREIGN KEY(thread_id) REFERENCES threads(id)"
+	usersConstraint :=
+		"alter table contributors add CONSTRAINT if not exists fk_contributor_id_users_id FOREIGN KEY(contributor_id) REFERENCES users(id)"
+
+	// TODO: return errors if exist
+	db.Exec(threadsConstraint)
+	db.Exec(usersConstraint)
+	return nil
+}
+
+func (c *Contribute) DeleteConstraints(db *gorm.DB) error {
+	// i dont think gorm requires semicolons at the end
+	// TODO: determine if gorm needs semicolons
+	threadsConstraint :=
+		"alter table thread_comments DROP FOREIGN KEY if exists fk_contributor_id_threads_id"
+	usersConstraint :=
+		"alter table thread_comments DROP FOREIGN KEY if exists fk_contributor_id_users_id"
+
+	// TODO: return errors if exist
+	db.Exec(threadsConstraint)
+	db.Exec(usersConstraint)
 	return nil
 }
 

@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
@@ -68,6 +69,10 @@ func Encrypt(text, MySecret string) (string, error) {
 	cipherText := make([]byte, len(plainText))
 	cfb.XORKeyStream(cipherText, plainText)
 	return Encode(cipherText), nil
+}
+
+func NotImplementedYet() error {
+	return errors.New("method is not implemented yet")
 }
 
 

@@ -3,8 +3,24 @@ package messages;
 
 import "google/protobuf/timestamp.proto";
 import "general.proto";
+import "user_rest.proto";
 option go_package = "/messages";
 
+message ThreadComments {
+  repeated CommentThread comments = 1;
+}
+
+// ThreadComment is for activly fetching the user's comments
+message CommentThread {
+  string comment = 1;
+  UserDisplayInfo author = 2;
+  uint64 createdAt = 3;
+  uint64 lastUpdatedAt = 4; // TODO: impl
+  string commentUUID = 5;
+  string parentCommentUUID = 6;
+}
+
+// Comment posted is for the creation of a new comment
 message CommentPosted {
   string comment = 1;
   uint64 authorID = 2;

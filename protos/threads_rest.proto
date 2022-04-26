@@ -3,7 +3,43 @@ syntax = "proto3";
 package messages;
 
 import "google/protobuf/timestamp.proto";
+import "user_rest.proto";
+import "general.proto";
 option go_package = "/messages";
+
+// TODO: impl
+// sort by topic
+// sort by recent
+// sort by user
+// sort by hashtags
+
+//message ThreadPage {
+//
+//  // Deals with getting the thread data for the frontpage, and subsequent pages
+//  repeated ThreadDisplayInfo threadDisplay = 1;
+//}
+
+message ThreadPageRequest {
+  string topic = 1;
+
+  // TODO: replated created after usage with the state uuid
+  int64 createdBefore = 2;
+
+  string stateUUID = 3; // TODO: impl
+}
+
+message ThreadDisplayInfo {
+  string title = 1;
+  string description = 2;
+  int64 createdAt = 3; // in milliseconds since epoch
+  string imageURL = 10;
+  UserDisplayInfo creator = 20;
+  repeated UserDisplayInfo contributors = 21;
+
+  int64 watchers = 30; // TODO: impl
+  int64 comments = 31;
+  int64 threadContributors = 32;// TODO: impl
+}
 
 message ThreadInfo {
   string title = 1;
@@ -12,7 +48,7 @@ message ThreadInfo {
   repeated ThreadContributor threadContributors = 4;
 
   // To Exist only when the thread is SemiPrivate
-  repeated ThreadViewers viewers = 5; // TODO: Impl functionality
+  // repeated ThreadViewers viewers = 5; // TODO: Impl functionality
   PublicityLevel publicityLevel = 6;
 
   // To come from AFTER the upload phase
@@ -25,25 +61,14 @@ message UpdateThread {
   ThreadInfo threadInfo = 2;
 }
 
-enum PublicityLevel {
-  UnknownPublicLevel = 0;
-  ThreadPublic = 1;
-  ThreadPrivate = 2;
-  ThreadSemiPrivate = 3;   // TODO: Impl functionality
-  ThreadFollowersOnly = 4; // TODO: Impl functionality
-}
-
-enum ContributeLevel {
-  UnknownLevel = 0;
-  ThreadPoster = 1;
-  ThreadAdmin = 2;
-}
 
 message ThreadContributor {
+  // This I understand
   uint64 authorID = 1;
   ContributeLevel level = 2;
 }
 
-message ThreadViewers {
-  repeated uint64 viewerIDs = 1;
-}
+//message ThreadViewers {
+//  // This, i dont understand
+//  repeated uint64 viewerIDs = 1;
+//}

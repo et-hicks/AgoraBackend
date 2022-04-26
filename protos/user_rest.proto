@@ -2,11 +2,18 @@ syntax = "proto3";
 package messages;
 
 import "google/protobuf/timestamp.proto";
+import "general.proto";
 option go_package = "/messages";
 
 
-// Login
-// Create
+message UserDisplayInfo {
+  string username = 1;
+  string userPageURL = 2;
+  string userImageURL = 3;
+  ContributeLevel level = 4;
+}
+
+// TODO: profile page ... somewhere
 
 message UserInfo {
   string username = 1;
