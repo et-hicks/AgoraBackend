@@ -20,6 +20,7 @@ type AgoraUser struct {
 	PhoneNumber string
 	PhoneCode   string
 	Type     messages.AccountType
+	ImageURL string
 	FunctionalStuff
 }
 
@@ -83,6 +84,7 @@ func (u *AgoraUser) CreateTable(db *gorm.DB) error {
 		phone_number CHAR(255) CHARACTER SET UTF8MB4 DEFAULT NULL,
     	phone_code CHAR(255) CHARACTER SET UTF8MB4 DEFAULT NULL,
 		type	CHAR(255) CHARACTER SET UTF8MB4 DEFAULT NULL,
+		image_url CHAR(255) DEFAULT NULL,
 		fefs_json TEXT DEFAULT NULL,
 		befs_json TEXT DEFAULT NULL,
 		

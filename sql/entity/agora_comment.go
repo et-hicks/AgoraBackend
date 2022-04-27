@@ -15,6 +15,7 @@ type AgoraComment struct {
 	Likes			uint64
 	Dislikes		uint64
 	UUID string
+	ThreadID uint
 	FunctionalStuff
 }
 
@@ -78,6 +79,7 @@ func (c *AgoraComment) CreateTable(db *gorm.DB) error {
         likes BIGINT DEFAULT NULL,
 		dislikes BIGINT DEFAULT NULL,
 		uuid CHAR(255) CHARACTER SET UTF8MB4,
+		thread_id BIGINT,
 		
 		fefs_json TEXT DEFAULT NULL,
 		befs_json TEXT DEFAULT NULL,

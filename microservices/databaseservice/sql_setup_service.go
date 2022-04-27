@@ -29,7 +29,7 @@ func SQLSetUp(w http.ResponseWriter, r *http.Request) {
 	// Get the SQL tables we want
 	var comments entity.AgoraComment
 	var agoraThreads entity.AgoraThread
-	var contributor entity.Contribute
+	var contributor entity.Contributor
 	var topics entity.Topic
 	var users entity.AgoraUser
 	var watcher entity.Watcher

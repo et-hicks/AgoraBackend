@@ -64,7 +64,7 @@ message UpdateThread {
 
 message ThreadContributor {
   // This I understand
-  uint64 authorID = 1;
+  uint64 userID = 1;
   ContributeLevel level = 2;
 }
 

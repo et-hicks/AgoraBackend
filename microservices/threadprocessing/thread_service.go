@@ -30,8 +30,14 @@ func (t *ThreadProcessing) Init() error {
 
 func (t *ThreadProcessing) Run() {
 
-	// Create new Thread
+	// Create new ThreadID
 	t.router.POST("/create", CreateThread(t.db))
+
+	t.router.GET("/findPage", FetchThreads(t.db))
+
+	t.router.GET("/find/:threadID", FetchThreadDisplayInfo(t.db)) // TODO: remove I think??
+
+	t.router.GET("/whole/:urlUUID", FetchThreadWhole(t.db))
 
 	// TODO: Learn a way for graceful shutdown
 	t.router.DELETE("/reset", microserviceutils.HardReset)

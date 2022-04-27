@@ -83,10 +83,10 @@ func createThreadEntity(info *messages.ThreadInfo, db *gorm.DB) (*entity.AgoraTh
 func createThreadContributors(db *gorm.DB, threadID uint, creatorID uint, contributors []*messages.ThreadContributor) error {
 	threadCreator := messages.ContributeLevel_ThreadCreator
 
-	creator := entity.Contribute{
-		Contributor: creatorID,
-		Thread:      threadID,
-		Access:      threadCreator,
+	creator := entity.Contributor{
+		ContributorID: creatorID,
+		ThreadID:      threadID,
+		Access:        threadCreator,
 	}
 	result := db.Create(&creator) // DB access
 	if result.Error != nil {
@@ -94,14 +94,14 @@ func createThreadContributors(db *gorm.DB, threadID uint, creatorID uint, contri
 	}
 
 	for _, contributor := range contributors {
-		canContribute := entity.Contribute{
-			Contributor: uint(contributor.AuthorID),
-			Thread:      threadID,
-			Access:      contributor.Level,
+		canContribute := entity.Contributor{
+			ContributorID: uint(contributor.UserID),
+			ThreadID:      threadID,
+			Access:        contributor.Level,
 		}
 		contributeResult := db.Create(&canContribute) // DB access
 		if contributeResult.Error != nil {
-			log.Println("Error: Cannot create", contributor.AuthorID, " in the thing.")
+			log.Println("Error: Cannot create", contributor.UserID, " in the thing.")
 		}
 	}
 	return nil

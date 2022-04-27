@@ -7,25 +7,25 @@ import (
 
 
 
-type Contribute struct {
+type Contributor struct {
 	gorm.Model
-	Contributor uint
-	Thread      uint
-	Access messages.ContributeLevel
+	ContributorID uint
+	ThreadID      uint
+	Access        messages.ContributeLevel
 }
 
-func (c *Contribute) LoadForCode() error {
+func (c *Contributor) LoadForCode() error {
 
 	return nil
 }
 
-func (c *Contribute) UnloadForDatabase() error {
+func (c *Contributor) UnloadForDatabase() error {
 
 	return nil
 }
 
 
-func (c *Contribute) CreateTable(db *gorm.DB) error {
+func (c *Contributor) CreateTable(db *gorm.DB) error {
 	createTableSql := `
 		CREATE TABLE contributors (
 			id bigint NOT NULL AUTO_INCREMENT,
@@ -37,7 +37,7 @@ func (c *Contribute) CreateTable(db *gorm.DB) error {
 			thread_id BIGINT,
 			access CHAR(255) CHARACTER SET UTF8MB4 NOT NULL,
 		
-			PRIMARY KEY(id),
+			PRIMARY KEY(id)
 
 		) ENGINE=InnoDB;
 	`
@@ -48,7 +48,7 @@ func (c *Contribute) CreateTable(db *gorm.DB) error {
 	return nil
 }
 
-func (c *Contribute) AddConstraints(db *gorm.DB) error {
+func (c *Contributor) AddConstraints(db *gorm.DB) error {
 	// i dont think gorm requires semicolons at the end
 	// TODO: determine if gorm needs semicolons
 	threadsConstraint :=
@@ -62,7 +62,7 @@ func (c *Contribute) AddConstraints(db *gorm.DB) error {
 	return nil
 }
 
-func (c *Contribute) DeleteConstraints(db *gorm.DB) error {
+func (c *Contributor) DeleteConstraints(db *gorm.DB) error {
 	// i dont think gorm requires semicolons at the end
 	// TODO: determine if gorm needs semicolons
 	threadsConstraint :=
@@ -76,7 +76,7 @@ func (c *Contribute) DeleteConstraints(db *gorm.DB) error {
 	return nil
 }
 
-func (c *Contribute) UpdateTable(db *gorm.DB, sqlUpdate string) error {
+func (c *Contributor) UpdateTable(db *gorm.DB, sqlUpdate string) error {
 	db.Exec(sqlUpdate)
 
 	return nil

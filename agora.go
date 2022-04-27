@@ -86,7 +86,9 @@ func main() {
 	default:
 		log.Println("nothing found for name")
 	}
-	//gormTest()
+	threadprocessing.Service()
+	//commentprocessing.Service()
+	// gormTest()
 	//commentprocessing.Service()
 	//threadprocessing.Service()
 	//userprocessing.Service()

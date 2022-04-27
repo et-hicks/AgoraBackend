@@ -17,6 +17,10 @@ import (
 func CreateComment(db *gorm.DB) func(ctx *gin.Context) {
 	// log.Println("I cannot believe this actually worked")
 	// I can do additional processing here
+
+	// TODO: check that the user can actually comment on the thread
+	// TODO: check that the thread actually exists
+
 	return func (ctx *gin.Context) {
 		body, _ := ioutil.ReadAll(ctx.Request.Body)
 		newComment := &messages.CommentPosted{}
@@ -61,6 +65,7 @@ func createEntity(comment *messages.CommentPosted, db *gorm.DB) (*entity.AgoraCo
 		Likes:             0,
 		Dislikes:          0,
 		UUID: uid.String(),
+		ThreadID: uint(comment.ThreadID),
 	}
 
 	result := db.Create(&commentEntity)
@@ -91,11 +96,9 @@ func nilChecks(comment *messages.CommentPosted) error {
 	if comment.AuthorID == 0 {
 		return errors.New("no author id in the comment")
 	}
-	UUIDNil := comment.ThreadUUID == ""
-	threadIDNil := comment.ThreadID == 0
 
-	if UUIDNil && threadIDNil {
-		return errors.New("must have one of uuid or thread id")
+	if comment.ThreadID == 0 {
+		return errors.New("must have  thread id")
 	}
 
 	return nil
