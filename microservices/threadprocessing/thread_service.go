@@ -37,7 +37,7 @@ func (t *ThreadProcessing) Run() {
 
 	t.router.GET("/find/:threadID", FetchThreadDisplayInfo(t.db)) // TODO: remove I think??
 
-	t.router.GET("/whole/:urlUUID", FetchThreadWhole(t.db))
+	t.router.GET("/thread/threadID/:threadID", FetchThreadComments(t.db))
 
 	// TODO: Learn a way for graceful shutdown
 	t.router.DELETE("/reset", microserviceutils.HardReset)

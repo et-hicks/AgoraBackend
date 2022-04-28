@@ -31,3 +31,19 @@ func FindThreadContributors(db *gorm.DB, threadID uint) (*[]entity.Contributor, 
 
 	return &contributors, nil
 }
+
+func FindThreadComments(db *gorm.DB, threadID uint) (*[]entity.AgoraComment, error) {
+
+	// TODO: somehow enforce some ordering here
+
+	var comments []entity.AgoraComment
+
+	result := db.Where("thread_id = ?", threadID).Find(&comments) // DB Access
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &comments, nil
+}
+

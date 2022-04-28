@@ -15,9 +15,35 @@ import (
 	"strconv"
 )
 
-func FetchThreadWhole(db *gorm.DB) func(ctx *gin.Context) {
-	return func(ctx *gin.Context) {
+func FetchThreadComments(db *gorm.DB) func(ctx *gin.Context) {
 
+	// For getting the comments to a thread
+
+	// TODO: (in the distant future)
+	// SEO/SSR will mean the front end wont have title NOR comments
+	// so we will need that fetching then
+	return func(ctx *gin.Context) {
+		threadID := ctx.Param("threadID")
+		u64, convertErr := strconv.ParseUint(threadID, 10, 64)
+		if convertErr != nil {
+			log.Println("error in string convert: ", convertErr)
+			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(convertErr))
+			return
+		}
+
+		comments, commentsError := queries.FindThreadComments(db, uint(u64))
+		if commentsError != nil {
+			log.Println("error in string convert: ", commentsError)
+			ctx.JSON(http.StatusBadRequest, microserviceutils.BadHTTP(commentsError))
+			return
+		}
+
+		var threadComments []*messages.CommentThread
+		for _, item := range *comments {
+			comment, _ := createCommentProto(item) // TODO: nil checks
+			threadComments = append(threadComments, comment)
+		}
+		ctx.JSON(http.StatusOK, threadComments)
 	}
 }
 
@@ -96,6 +122,21 @@ func createThreadDisplayInfo(db *gorm.DB, id uint) (*messages.ThreadDisplayInfo,
 	return createInfoProto(threadEntity, creatorProto, contributorsProto, commentCount)
 }
 
+func createCommentProto(comment entity.AgoraComment) (*messages.CommentThread, error){
+
+	oneComment := messages.CommentThread{
+		Comment:           comment.Comment,
+		Author:            nil,
+		CreatedAt:         uint64(comment.CreatedAt.UnixMilli()),
+		LastUpdatedAt:     uint64(comment.UpdatedAt.UnixMilli()),
+		CommentUUID:       comment.UUID,
+		ParentCommentUUID: comment.ParentCommentUUID,
+		AuthorID: uint64(comment.AuthorID),
+	}
+
+	return &oneComment, nil
+}
+
 func createInfoProto(
 	threadEntity entity.AgoraThread, creator *messages.UserDisplayInfo,
 	contributors []*messages.UserDisplayInfo, comments int64) (*messages.ThreadDisplayInfo, error) {
@@ -113,5 +154,4 @@ func createInfoProto(
 	}
 
 	return &oneThread, nil
-
 }
