@@ -10,7 +10,7 @@ message UserDisplayInfo {
   string username = 1;
   string userPageURL = 2;
   string userImageURL = 3;
-  ContributeLevel level = 4;
+  ContributeLevel contributeLevel = 4;
 }
 
 // TODO: profile page ... somewhere

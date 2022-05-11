@@ -97,7 +97,7 @@ func createThreadContributors(db *gorm.DB, threadID uint, creatorID uint, contri
 		canContribute := entity.Contributor{
 			ContributorID: uint(contributor.UserID),
 			ThreadID:      threadID,
-			Access:        contributor.Level,
+			Access:        contributor.ContributeLevel,
 		}
 		contributeResult := db.Create(&canContribute) // DB access
 		if contributeResult.Error != nil {

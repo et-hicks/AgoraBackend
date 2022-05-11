@@ -11,7 +11,7 @@ func ConvertUserToUserDisplayInfo(user *entity.AgoraUser, level messages.Contrib
 		Username:     user.Username,
 		UserPageURL:  "/path/to/users/page",
 		UserImageURL: user.ImageURL,
-		Level:        level,
+		ContributeLevel:        level,
 	}
 	return &userDisplay
 }

@@ -65,7 +65,7 @@ message UpdateThread {
 message ThreadContributor {
   // This I understand
   uint64 userID = 1;
-  ContributeLevel level = 2;
+  ContributeLevel contributeLevel = 2;
 }
 
 //message ThreadViewers {
