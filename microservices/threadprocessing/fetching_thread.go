@@ -73,6 +73,7 @@ func FetchThreads(db *gorm.DB) func(ctx *gin.Context) {
 		body, _ := ioutil.ReadAll(ctx.Request.Body)
 
 		// TODO: we are not currently using the the request object. we should use it
+		// TODO: allow for an empty body here
 		request := &messages.ThreadPageRequest{}
 		if unmarshallErr := protojson.Unmarshal(body, request); unmarshallErr != nil {
 			log.Println("error in marshalling: ", unmarshallErr)
