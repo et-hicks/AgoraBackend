@@ -26,7 +26,6 @@ type Employees struct {
 func gormExample() {
 
 	//gormDb, err := gorm.Open(sqlserver.Open(dsn), &gorm.Config{})
-	dosn := "agora_mysql_admin:DigitalMcDonalds$3.21@tcp(agora-mysql-dev.mysql.database.azure.com)/agora?charset=utf8mb4"
 	fmt.Println(dosn)
 	gormDb, err := gorm.Open(mysql.Open(dosn), &gorm.Config{})
 	if err != nil {
@@ -55,7 +54,6 @@ func BuildUser(user *entity.AgoraUser) {
 	user.FirstName = "Ethan"
 	user.LastName = "Hicks"
 	user.Email = "etmhicks@gmail.com"
-	user.Password = "DigitalMcDonalds&3.21"
 	user.Type = messages.AccountType(4)
 	user.BEFSJson =`{
 	   "name":"John",
@@ -100,7 +98,7 @@ func gormTest() {
 	// Create connection pool
 	gormExample()
 
-	dosn := "agora_mysql_admin:DigitalMcDonalds$3.21@tcp(agora-mysql-dev.mysql.database.azure.com)/agora?charset=utf8mb4&parseTime=true"
+
 	fmt.Println(dosn)
 	gormDb, sqlErr := gorm.Open(mysql.Open(dosn), &gorm.Config{})
 

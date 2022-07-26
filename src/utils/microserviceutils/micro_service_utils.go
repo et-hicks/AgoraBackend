@@ -23,7 +23,6 @@ var bytes = []byte{35, 46, 57, 24, 85, 35, 24, 74, 87, 35, 88, 98, 66, 32, 14, 0
 const MySecret string = "abc&1*~#^2^#s0^=)^^7%b34"
 
 func GeneralInit() (*gorm.DB, *gin.Engine, error) {
-	dosn := "agora_mysql_admin:DigitalMcDonalds$3.21@tcp(agora-mysql-dev.mysql.database.azure.com)/agora?charset=utf8mb4&parseTime=true"
 	fmt.Println(dosn)
 	gormDb, sqlErr := gorm.Open(mysql.Open(dosn), &gorm.Config{})
 

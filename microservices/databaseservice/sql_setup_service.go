@@ -19,7 +19,6 @@ import (
 
 
 func SQLSetUp(w http.ResponseWriter, r *http.Request) {
-	dosn := "agora_mysql_admin:DigitalMcDonalds$3.21@tcp(agora-mysql-dev.mysql.database.azure.com)/agora?charset=utf8mb4&parseTime=true"
 	fmt.Println(dosn)
 	gormDB, sqlErr := gorm.Open(mysql.Open(dosn), &gorm.Config{})
 	if sqlErr != nil {
